@@ -1,4 +1,5 @@
 import re
+from resumes.services.semantic_matcher import calculate_semantic_similarity
 from resumes.skills_aliases import SKILL_ALIASES
 SKILL_WEIGHTS={
     "python":10,
@@ -93,4 +94,25 @@ def calculate_skill_gap(resume_skills,job_skills):
         "matched_skills":matched_skills,
         "missing_skills":missing_skills,
         "skill_gap_count":len(missing_skills)
+    }
+
+def calculate_ai_match(
+        resume_skills,
+        job_skills,
+        resume_experience,
+        job_experience,
+        resume_text,
+        job_description
+):
+    skill_result=calculate_skill_match(resume_skills,job_skills,resume_experience,job_experience)
+    semantic_score=calculate_semantic_similarity(resume_text,job_description)
+    semantic_percentage=max(0,min(semantic_score*100,100))
+    final_score=(skill_result["skill_match_percentage"]*0.50+semantic_percentage*0.30+skill_result["experience_match_percentage"]*0.20)
+    return {
+        "match_percentage":round(final_score,2),
+        "skill_match_percentage":skill_result["skill_match_percentage"],
+        "semantic_match_percentage":round(semantic_percentage,2),
+        "experience_match_percentage":skill_result["experience_match_percentage"],
+        "matched_skills":skill_result["matched_skills"],
+        "missing_skills":skill_result["missing_skills"],
     }

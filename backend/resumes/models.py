@@ -24,3 +24,22 @@ class Skill(models.Model):
 
     def __str__(self):
         return self.name
+
+class ResumeAnalysis(models.Model):
+    resume = models.OneToOneField(
+        Resume,
+        on_delete=models.CASCADE,
+        related_name="analysis"
+    )
+
+    summary = models.TextField(blank=True)
+    strengths = models.JSONField(default=list, blank=True)
+    weaknesses = models.JSONField(default=list, blank=True)
+    suggested_skills = models.JSONField(default=list, blank=True)
+    improvement_tips = models.JSONField(default=list, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Analysis for {self.resume.original_filename}"

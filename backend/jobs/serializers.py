@@ -41,6 +41,7 @@ class JobMatchSerializer(serializers.ModelSerializer):
             "match_percentage",
             "skill_match_percentage",
             "experience_match_percentage",
+            "semantic_match_percentage",
             "matched_skills",
             "missing_skills",
             "created_at",

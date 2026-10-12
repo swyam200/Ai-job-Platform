@@ -45,11 +45,14 @@ INSTALLED_APPS = [
     'accounts',
     'resumes',
     'jobs',
+    "drf_spectacular",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -112,6 +115,7 @@ REST_FRAMEWORK={
     "DEFAULT_PERMISSION_CLASSES":(
         "rest_framework.permissions.IsAuthenticated"
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 # Internationalization
@@ -130,6 +134,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+GROQ_API_KEY=os.getenv("GROQ_API_KEY")
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -138,3 +144,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL="accounts.User"
 MEDIA_URL="/media/"
 MEDIA_ROOT=BASE_DIR/"media"
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "AI Job Intelligence Platform API",
+    "DESCRIPTION": "APIs for resume analysis, job matching, and skill-gap analysis.",
+    "VERSION": "1.0.0",
+}
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]

@@ -27,6 +27,7 @@ class jobMatch(models.Model):
     match_percentage=models.FloatField()
     skill_match_percentage=models.FloatField(default=0)
     experience_match_percentage=models.FloatField(default=0)
+    semantic_match_percentage=models.FloatField(default=0)
     matched_skills=models.JSONField(default=list,blank=True)
     missing_skills=models.JSONField(default=list,blank=True)
     created_at=models.DateTimeField(auto_now_add=True)

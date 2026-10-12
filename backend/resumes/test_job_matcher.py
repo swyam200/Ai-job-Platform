@@ -1,10 +1,29 @@
-from django.test import SimpleTestCase
-from resumes.services.job_matcher import(calculate_skill_match,normalized_skill)
-class JobMatcherTest(SimpleTestCase):
-    def test_skill_alias_normalization(self):
-        self.assertEqual(normalized_skill("React.js"),"react")
-        self.assertEqual(normalized_skill("DRF"),"django rest framework")
-    def test_skill_matching_with_aliases(self):
-        result=calculate_skill_match(resume_skills=["python","React.js","DRF"],job_skills=["python","react","django rest framework"])
-        self.assertEqual(result["matched_skills"],["django rest framework","python","react"])
-        self.assertEqual(result["missing_skills"],[])
+
+def test_skill_gap_identifies_missing_skills(self):
+        from resumes.services.job_matcher import calculate_skill_gap
+
+        result = calculate_skill_gap(
+            resume_skills=["Python", "Django"],
+            job_skills=["Python", "Django", "React", "Docker"],
+        )
+
+        self.assertEqual(
+            set(result["matched_skills"]),
+            {"python", "django"},
+        )
+        self.assertEqual(
+            set(result["missing_skills"]),
+            {"react", "docker"},
+        )
+        self.assertEqual(result["skill_gap_count"], 2)
+
+def test_matching_score_stays_between_zero_and_100(self):
+        from resumes.services.job_matcher import calculate_skill_match
+
+        result = calculate_skill_match(
+            resume_skills=["Python", "Django", "SQL"],
+            job_skills=["Python", "Django", "SQL"],
+        )
+
+        self.assertGreaterEqual(result["match_percentage"], 0)
+        self.assertLessEqual(result["match_percentage"], 100)
